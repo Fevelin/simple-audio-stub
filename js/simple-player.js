@@ -1,3 +1,58 @@
+// use DOM to get a reference to the UI elements
+const button = document.getElementById("play-pause-button");
+const currentTime = document.getElementById("current-time");
+const totalTime = document.getElementById("total-time");
+const seekBar = document.getElementById("seek-bar");
+const audio = new Audio("audio/Soft-Background-for-Interview.webm");
+// seek state - are we seeking?
+let seeking = false;
+
+// Listen to button clicks using arrow function
+button.onclick = (event) =>{
+    if(audio.paused) {
+        audio.play();
+    }else{
+        audio.pause();
+    }
+
+}
+// audio objects listeners
+audio.onplay = (event) =>{
+    button.src = "images/pause.svg";
+}
+audio.onpause = (event) =>{
+    button.src = "images/play.svg";
+}
+audio.onloadedmetadata = (event) =>{
+    currentTime.innerHTML = formatTime(0);
+    totalTime.innerHTML = formatTime(audio.duration);
+    seekBar.max = Math.floor(audio.duration);
+    seekBar.value = 0;
+}
+audio.oncanplaythrough = (event) =>{
+    seekBar.disabled = false;
+
+}
+audio.ontimeupdate = (event) =>{
+    currentTime.innerHTML = formatTime(audio.currentTime);
+    if(!seeking){
+        seekBar.value = Math.floor(audio.currentTime);
+
+    }
+}
+// seekBar listeners
+seekBar.oninput = (event) =>{
+    seeking = true;
+}
+seekBar.onchange = (event) =>{
+    audio.currentTime = seekBar.value;
+    if(!audio.paused){
+        audio.play();
+    }
+    seeking = false;
+}
+
+//HELPER FUNCTIONS
 function formatTime(secs) {
     let hours = Math.floor(secs / 3600);
     let minutes = Math.floor((secs - (hours * 3600)) / 60);
