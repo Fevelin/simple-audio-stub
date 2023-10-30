@@ -4,6 +4,7 @@ const currentTime = document.getElementById("current-time");
 const totalTime = document.getElementById("total-time");
 const seekBar = document.getElementById("seek-bar");
 const audio = new Audio("audio/Soft-Background-for-Interview.webm");
+const volumeBtn = document.getElementById("volume-button");
 // seek state - are we seeking?
 let seeking = false;
 
